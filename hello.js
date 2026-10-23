@@ -44,6 +44,7 @@ async function main() {
   for (const p of citationPaths) console.log(`--- citations found at: ${p}`);
   console.log(`--- ${resultUrls.size} URLs in search results (retrieved, not necessarily cited)`);
   if (citations[0]) console.log("--- first citation as returned:\n" + JSON.stringify(citations[0], null, 2));
+  if (citations[0]) console.log("--- unique cited URLs:");
   for (const url of new Set(citations.map((c) => c.url))) console.log(url);
 }
 
