@@ -91,3 +91,77 @@ Caveat: one question, three runs, one engine, one configuration. Directional, no
 - N runs per question: 3 is the floor, brand-list variance may demand more
 - Which model to query as "the Claude engine," and the reason
 - No other engines attempted yet
+## 2026-10-22 — First real collection
+
+24 calls, 8 questions x 3 runs. 24/24 on claude-opus-5-5 (confirms the fallback
+removal worked), 0 errors.
+
+**Retrieval only fires when the query names a product category or a brand.**
+Citations by question:
+- "best google review management service" → 14, 13, 13
+- "white label review management service" → 11, 13, 10
+- "is birdeye a good service" → 12, 16, 14
+- "can you offer a discount if someone leaves you a good review" → 10, 0, 0
+- "how to get more reviews on google maps" → 0, 0, 0
+- "how to ask customers for a review" → 0, 0, 0
+- "can i pay someone to manage my google business profile" → 0, 0, 0
+- "why does my competition show up higher on google maps" → 0, 0, 0
+
+The predictor is not purchase intent. "Can i pay someone to manage my google
+business profile" is about as high-intent as a query gets and it got zero
+retrieval on all three runs. What the searched queries have in common is a
+category noun ("review management service") or a brand ("birdeye").
+
+Implication: for queries phrased in plain customer language rather than
+category vocabulary, there is no citation opportunity for anyone. Nothing is
+retrieved, so no content strategy can surface any brand there. Training-data presence
+is the only lever and it's slow and largely outside any one brand's control. That splits
+the GEO strategy in two by query vocabulary, not by funnel stage.
+
+Third kind of variance found: the discount question searched on 1 of 3 runs.
+Whether retrieval fires is probabilistic, not a property of the query.
+
+Tracked brand: 0 mentions across all 24 responses.
+
+Caveat: one engine, one configuration, 8 questions, 3 runs. Directional.
+### Scorer and the first eval
+
+Built score.js naively (plain JSON parsing, no schema). Claude predicted it would
+fail on at least one of 24 responses. It didn't — 24/24 parsed. Revised lesson:
+naive parsing worked at this sample size, which is not the same as reliable. The
+stronger reason to add a schema is value constraint, not parse safety: nothing
+stopped the model returning an invalid enum. Checked all 24 rows; enums were
+clean, so the schema is insurance rather than a fix.
+
+Four-state citation rubric paid off immediately. Of 24 responses: 14 no_retrieval
+(nothing searched, nobody could be cited) and 10 absent (retrieval happened, the tracked brand
+wasn't in it). So "the tracked brand in 0 of 24" overstates the opportunity. The addressable
+problem is 10 responses across 3 questions. A two-state rubric would have pointed
+me at a content strategy for queries where content cannot help.
+
+Rubric v1 competitor field was too loose: "every vendor or product brand named"
+captured platforms (Google, Yelp), marketplaces (Amazon, Upwork, Fiverr),
+software directories (G2, Capterra), and one cryptocurrency. Checked the raw
+response for "Solana" before concluding the scorer hallucinated — it hadn't. The
+response disambiguated Birdeye the reputation software from Birdeye the Solana
+tool. Scorer correct, specification wrong. Third time checking the instrument
+instead of assuming, third time it mattered.
+
+v2 split competitors from platforms with tight definitions. Tail went from ~59
+names to 37 + 10. Top four unchanged: Podium 13, Birdeye 13, NiceJob 12,
+BrightLocal 10. Signal was robust to the rubric change, which means the loose
+definition was adding tail noise rather than creating the finding.
+
+Added rubric_version so v1 and v2 live in the same file and stay comparable.
+
+Still wrong in v2: normalization instruction partially failed (Weaverev vs
+WeaveRev, Lead Oracle vs Lead Oracle AI). Lesson: telling a model to normalize is
+probabilistic, doing it in code is deterministic — moving it to report time.
+Amazon and Etsy still classed as platforms, correctly per my definition, which
+didn't scope to local business reputation.
+
+Methodology note: at 2 runs the brand list turned over 50%. At 24 runs a stable
+top four emerges. Per-run variance washes out in aggregate, so N runs plus
+aggregation across questions is what makes structure visible.
+
+Google appears in 24 of 24 responses.
