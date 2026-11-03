@@ -165,3 +165,7 @@ top four emerges. Per-run variance washes out in aggregate, so N runs plus
 aggregation across questions is what makes structure visible.
 
 Google appears in 24 of 24 responses.
+
+## 2026-11-02: Correction to the retrieval finding
+
+The Oct 22 entry says retrieval only fires when a query names a product category or a brand. Rechecked against questions.txt before publishing, and both halves were too strong. Three questions name Google products (Maps, Business Profile) and none searched, so “brand” was too broad. The discount question names neither and searched on 1 of 3 runs, so “only” was wrong. Accurate version: questions naming a type of service or a specific vendor searched on 9 of 9 runs; the other five searched on 1 of 15. Also verified against the logged search_count that every zero-citation response ran zero searches, so “searched nothing” is measured, not inferred.
