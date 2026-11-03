@@ -47,7 +47,7 @@ Also scored: prominence, competitors named, platforms named, and a short note.
 
 From 8 questions, 3 runs each, 24 responses:
 
-- Retrieval tracked whether a question named a type of service or a specific vendor. The three questions that did searched on all 9 of their runs; the other five searched on 1 of 15. Naming a platform was not enough: questions about Google Maps and Google Business Profile never searched. 14 of 24 responses ran no search at all, including a high-intent question phrased in plain language (“can i pay someone to manage my google business profile”), which ran no search on any of its three runs. Every response that did search ran one search and cited sources.
+- **Retrieval tracked whether a question named a type of service or a specific vendor.** The three questions that did searched on all 9 of their runs; the other five searched on 1 of 15. Naming a platform was not enough: questions about Google Maps and Google Business Profile never searched. 14 of 24 responses ran no search at all, including a high-intent question phrased in plain language (“can i pay someone to manage my google business profile”), which ran no search on any of its three runs. Every response that did search ran one search and cited sources.
 - **Whether retrieval happens is not fixed per question.** One question searched on 1 of 3 runs.
 - **A stable set of competitors emerged in aggregate**, even though a single run's list changed by about half between repeats.
 - **On the core category question, all seven cited sources were roundup articles**, three of them published by competitors.
