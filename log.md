@@ -1,4 +1,4 @@
-## 2026-10-10 — Day 1
+## 2026-10-10: Day 1
 
 **Setup.** Claude Code through the desktop app Code tab, Manual permission mode so every
 change arrives as a diff I have to accept. Node 22. API key in .env, gitignored before the
@@ -7,7 +7,7 @@ first commit. Private GitHub repo.
 **First API call failed with a 400.** My script only printed the status code, so I had no
 information to work with. Changed the error path to print the full response body before
 guessing at causes. Body said: credit balance too low. Not a malformed request at all.
-Claude had predicted a bad beta header, and that fix would have been wrong — I'd have
+Claude had predicted a bad beta header, and that fix would have been wrong. I'd have
 deleted the header, gotten the identical 400, and been stuck with two suspects and no data.
 Lesson: read what the API tells you before acting on anyone's theory, including a confident one.
 
@@ -22,7 +22,7 @@ Run 1: NiceJob, Podium, Birdeye, GatherUp, Grade.us, Broadly, Swell.
 Run 2: NiceJob, BrightLocal, GatherUp, Grade.us, Podium, Birdeye, Weave, Signpost.
 Ten distinct brands across two runs, only five in both. A single call is noise. "Mentioned"
 has to be a rate across N runs, not a boolean. The append-only JSONL structure I chose this
-morning already handles this without a rewrite — one row per call, aggregate at report time.
+morning already handles this without a rewrite: one row per call, aggregate at report time.
 
 **Added web search: 2 searches, 18 URLs retrieved, 0 citations.** But the prose attributed
 claims to Zapier, Google and the FTC by name. So the model read sources, used them, named
@@ -74,14 +74,14 @@ competitors and other review platforms are capturing it while the tracked brand 
 Caveat: one question, three runs, one engine, one configuration. Directional, not statistical.
 
 **Decisions made today, and why**
-- Plain Node, three scripts, no framework — nothing between me and the code
-- Append-only JSONL, no database — data is append-only, a few hundred rows a year, and
+- Plain Node, three scripts, no framework: nothing between me and the code
+- Append-only JSONL, no database: data is append-only, a few hundred rows a year, and
   diffable in git so I can see what changed between runs
-- ask.js separate from score.js — rescoring with a new rubric shouldn't require re-querying
+- ask.js separate from score.js: rescoring with a new rubric shouldn't require re-querying
   and re-paying
-- raw fetch rather than the SDK — I wanted the request shape visible and to write my own
+- raw fetch rather than the SDK: I wanted the request shape visible and to write my own
   backoff when I hit rate limits
-- keep allowed_callers: ["direct"] — without it the citation dimension is unmeasurable, and
+- keep allowed_callers: ["direct"]: without it the citation dimension is unmeasurable, and
   citation is the point
 - last-response.json gitignored as debug output; runs.jsonl is the real data store
 
@@ -91,7 +91,7 @@ Caveat: one question, three runs, one engine, one configuration. Directional, no
 - N runs per question: 3 is the floor, brand-list variance may demand more
 - Which model to query as "the Claude engine," and the reason
 - No other engines attempted yet
-## 2026-10-22 — First real collection
+## 2026-10-22: First real collection
 
 24 calls, 8 questions x 3 runs. 24/24 on claude-opus-5-5 (confirms the fallback
 removal worked), 0 errors.
@@ -127,7 +127,7 @@ Caveat: one engine, one configuration, 8 questions, 3 runs. Directional.
 ### Scorer and the first eval
 
 Built score.js naively (plain JSON parsing, no schema). Claude predicted it would
-fail on at least one of 24 responses. It didn't — 24/24 parsed. Revised lesson:
+fail on at least one of 24 responses. It didn't: 24/24 parsed. Revised lesson:
 naive parsing worked at this sample size, which is not the same as reliable. The
 stronger reason to add a schema is value constraint, not parse safety: nothing
 stopped the model returning an invalid enum. Checked all 24 rows; enums were
@@ -142,7 +142,7 @@ me at a content strategy for queries where content cannot help.
 Rubric v1 competitor field was too loose: "every vendor or product brand named"
 captured platforms (Google, Yelp), marketplaces (Amazon, Upwork, Fiverr),
 software directories (G2, Capterra), and one cryptocurrency. Checked the raw
-response for "Solana" before concluding the scorer hallucinated — it hadn't. The
+response for "Solana" before concluding the scorer hallucinated. It hadn't. The
 response disambiguated Birdeye the reputation software from Birdeye the Solana
 tool. Scorer correct, specification wrong. Third time checking the instrument
 instead of assuming, third time it mattered.
@@ -156,7 +156,7 @@ Added rubric_version so v1 and v2 live in the same file and stay comparable.
 
 Still wrong in v2: normalization instruction partially failed (Weaverev vs
 WeaveRev, Lead Oracle vs Lead Oracle AI). Lesson: telling a model to normalize is
-probabilistic, doing it in code is deterministic — moving it to report time.
+probabilistic, doing it in code is deterministic. Moving it to report time.
 Amazon and Etsy still classed as platforms, correctly per my definition, which
 didn't scope to local business reputation.
 
