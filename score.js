@@ -1,7 +1,20 @@
 const fs = require("fs");
 
-const BRAND = "Example Brand";
-const BRAND_ALIASES = ["Example Brand"];
+// The tracked brand lives in brand.local.json (gitignored) so its name stays out of the repo.
+function loadBrand() {
+  let file = "brand.local.json";
+  if (!fs.existsSync(file)) {
+    console.warn(`Warning: ${file} not found, using brand.example.json. Copy it to ${file} and set your brand.`);
+    file = "brand.example.json";
+  }
+  const { brand, aliases } = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (typeof brand !== "string" || !brand || !Array.isArray(aliases) || !aliases.length) {
+    throw new Error(`${file} needs a non-empty "brand" string and "aliases" array`);
+  }
+  return { brand, aliases };
+}
+
+const { brand: BRAND, aliases: BRAND_ALIASES } = loadBrand();
 const SCORING_MODEL = "claude-sonnet-5-5";
 const RUBRIC_VERSION = 2;
 const DELAY_MS = 1000;
