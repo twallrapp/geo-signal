@@ -2,3 +2,5 @@ node_modules/
 .env
 last-response.json
 brand.local.json
+labels/to_label.jsonl
+labels/labeling_sheet.csv

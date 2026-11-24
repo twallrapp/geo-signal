@@ -173,3 +173,7 @@ The Oct 22 entry says retrieval only fires when a query names a product category
 ## 2026-11-03: Tracked brand moved to local config
 
 The brand is now read from a gitignored brand.local.json instead of being written into score.js. Its name is removed from the README, this log, and the scorer notes in scores.jsonl, replaced with “the tracked brand.” This is a redaction of one name, not a change to any measurement: every other field in scores.jsonl is unchanged, and runs.jsonl is untouched.
+
+## 2026-11-23: Phase 1 setup, checking the scorer
+
+Built sample.js and sheet-to-labels.js for hand-labeling. The plan was 24 to 30 responses spread across all four citation states, but only 24 responses exist and only two states occur (14 no_retrieval, 10 absent), so the sample is all 24, shuffled with seed 20261123. The sheet shows what the scorer saw (question, citation_count, cited URLs, response text) and none of its answers. Because no_retrieval is assigned from citation_count, which the sheet shows, citation state agreement will be close to automatic on this data. The real tests are whether the scorer missed any brand mention, and how well its competitor and platform lists match mine.
